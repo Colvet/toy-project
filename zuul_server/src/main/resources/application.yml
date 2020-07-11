@@ -1,0 +1,22 @@
+server:
+  port: 9090
+
+spring:
+  application:
+    name: zuul-server
+
+#Eureka Client
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:9091/eureka/
+
+#Zuul Routing
+zuul:
+  routes:
+
+    inflearn:
+      path: /inflearn/**
+      serviceId: inflearn-java
+
+
