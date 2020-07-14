@@ -1,0 +1,55 @@
+spring:
+  profiles:
+    active: eureka
+
+---
+spring:
+  application:
+    name: telegram-consumer
+  profiles: eureka
+
+server:
+  port: ${PORT:0}
+
+logging:
+  level:
+    org.springframework: debug
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:9091/eureka
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+management:
+  endpoint:
+    web:
+      exposure:
+        include: "*"
+
+
+  messages:
+    basename: messages
+
+  h2:
+    console:
+      enabled: true
+telegram:
+  bot:
+    name: colvet_bot
+    key:
+---
+spring:
+  profiles: test
+
+server:
+  port: 8080
+
+logging:
+  level:
+    org.springframework: debug
+
+telegram:
+  bot:
+    name: colvet_bot
+    key:
