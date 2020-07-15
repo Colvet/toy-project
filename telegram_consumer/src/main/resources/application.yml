@@ -1,11 +1,11 @@
 spring:
   profiles:
-    active: eureka
+    active: test
 
 ---
 spring:
   application:
-    name: telegram-consumer
+    name: telegram
   profiles: eureka
 
 server:
