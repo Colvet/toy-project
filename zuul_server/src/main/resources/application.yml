@@ -14,9 +14,13 @@ eureka:
 #Zuul Routing
 zuul:
   routes:
+#    twitter:
+#      path: /tweet/**
+#      serviceId: fetch-server
+#    inflearn:
+#      path: /inflearn/**
+#      serviceId: inflearn-java
 
-    inflearn:
-      path: /inflearn/**
-      serviceId: inflearn-java
-
-
+    telegram:
+      path: /telegram/**
+      serviceId: telegram
