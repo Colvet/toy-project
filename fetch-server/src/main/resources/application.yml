@@ -1,0 +1,59 @@
+spring:
+  profiles:
+    active: test
+
+---
+spring:
+  application:
+    name: fetch-server
+  profiles: eureka
+  data:
+    mongodb:
+      uri: mongodb://mongo:27017  # mongodb docker name "mongo"
+      database: toy
+
+server:
+  port: ${PORT:0}
+
+logging:
+  level:
+    org.springframework: debug
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:9091/eureka
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+management:
+  endpoint:
+    web:
+      exposure:
+        include: "*"
+
+
+  messages:
+    basename: messages
+
+open:
+  api:
+    key:
+
+---
+spring:
+  profiles: test
+  data:
+    mongodb:
+      uri: mongodb://127.0.0.1:27017
+      database: toy
+
+server:
+  port: 8081
+
+logging:
+  level:
+    org.springframework: debug
+
+open:
+  api:
+    key:
