@@ -1,11 +1,10 @@
 package colvet.toy.fetchserver.service;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CovidDataService {
+import java.io.IOException;
+
+public interface CovidDataService{
     void fetchCovidData() throws IOException;
 
 

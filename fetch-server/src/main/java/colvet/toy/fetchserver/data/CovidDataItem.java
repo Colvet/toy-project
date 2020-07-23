@@ -6,13 +6,14 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.util.Date;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Document("CovidData")
 public class CovidDataItem {
-
     private Integer defCnt;
     private Integer isolClearCnt;
     private Integer localOccCnt;
