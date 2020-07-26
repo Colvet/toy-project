@@ -1,10 +1,12 @@
 package colvet.toy.fetchserver.service;
 
 import colvet.toy.fetchserver.data.CovidDataItem;
+import colvet.toy.fetchserver.repository.CovidRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.XML;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +25,9 @@ public class CovidDataServiceImpl implements CovidDataService {
 
     @Value("${open.api.key}")
     private String apiKey;
+
+    @Autowired
+    CovidRepo covidRepo;
 
 
     @Override
@@ -84,6 +89,9 @@ public class CovidDataServiceImpl implements CovidDataService {
 
             System.out.println(covidDataItem);
         }
+
+
+
 
 
 

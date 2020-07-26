@@ -1,9 +1,7 @@
 package colvet.toy.fetchserver.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import javax.persistence.GeneratedValue;
 import java.util.Date;
 
 @Data

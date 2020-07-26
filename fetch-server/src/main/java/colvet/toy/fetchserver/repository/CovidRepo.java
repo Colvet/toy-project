@@ -8,6 +8,5 @@ import java.util.List;
 
 @Repository
 public interface CovidRepo extends MongoRepository<CovidDataItem, String> {
-//    CovidDataItem findCovidDataItemBy
-
+    CovidDataItem findAllByUpdateDtRegex(String DtRegex);
 }
