@@ -2,6 +2,7 @@ package colvet.toy.fetchserver.service;
 
 import colvet.toy.fetchserver.data.CovidDataItem;
 import colvet.toy.fetchserver.repository.CovidRepo;
+import com.netflix.discovery.converters.Auto;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -9,6 +10,7 @@ import org.json.XML;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,8 +19,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Date;
 
-@Component
 @Slf4j
+@Service
 public class CovidDataServiceImpl implements CovidDataService {
 
     private static final String covidUrl = "http://openapi.data.go.kr/openapi/service/rest/Covid19/getCovid19SidoInfStateJson";
@@ -28,6 +30,11 @@ public class CovidDataServiceImpl implements CovidDataService {
 
     @Autowired
     CovidRepo covidRepo;
+
+    @Autowired
+    public CovidDataServiceImpl(CovidRepo covidRepo){
+        this.covidRepo = covidRepo;
+    }
 
 
     @Override
@@ -70,30 +77,28 @@ public class CovidDataServiceImpl implements CovidDataService {
 
             JSONObject obj = (JSONObject) jsonItems.get(i);
             CovidDataItem covidDataItem = new CovidDataItem();
+//            covidRepo.insert(obj);
 
             covidDataItem.setDefCnt((Integer) obj.get("defCnt"));
             covidDataItem.setIsolClearCnt((Integer) obj.get("isolClearCnt"));
             covidDataItem.setLocalOccCnt((Integer) obj.get("localOccCnt"));
             covidDataItem.setIncDec((Integer) obj.get("incDec"));
-            covidDataItem.setUpdateDt((Date) obj.get("updateDt"));
-            covidDataItem.setCreateDt((Date) obj.get("createDt"));
+            covidDataItem.setCreateDt((String) obj.get("createDt"));
             covidDataItem.setGubun((String) obj.get("gubun"));
             covidDataItem.setGubunEn((String) obj.get("gubunEn"));
             covidDataItem.setDeathCnt((Integer) obj.get("deathCnt"));
-            covidDataItem.setStdDay((Date) obj.get("stdDay"));
-            covidDataItem.setQurRate((String) obj.get("qurRate"));
+            covidDataItem.setStdDay(obj.get("stdDay").toString());
+            covidDataItem.setQurRate(obj.get("qurRate").toString());
             covidDataItem.setOverFlowCnt((Integer) obj.get("overFlowCnt"));
             covidDataItem.setGubunCn((String) obj.get("gubunCn"));
             covidDataItem.setIsolIngCnt((Integer) obj.get("isolIngCnt"));
             covidDataItem.setSeq((Integer) obj.get("seq"));
+//            System.out.println(covidDataItem);
 
-            System.out.println(covidDataItem);
+
+            covidRepo.insert(covidDataItem);
+
+
         }
-
-
-
-
-
-
     }
 }

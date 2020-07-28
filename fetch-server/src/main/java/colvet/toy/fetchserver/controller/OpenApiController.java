@@ -22,10 +22,11 @@ public class OpenApiController {
     private static final String covidUrl = "http://openapi.data.go.kr/openapi/service/rest/Covid19/getCovid19SidoInfStateJson";
 
 
-    @GetMapping("/fetch")
+    @GetMapping("/fetchdata")
     public String fetch() throws IOException {
 
        fetchCovidDataService.fetchCovidData();
+
 
         return "Success";
     }

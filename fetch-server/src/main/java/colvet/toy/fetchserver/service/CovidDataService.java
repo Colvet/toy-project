@@ -6,4 +6,5 @@ public interface CovidDataService{
     void fetchCovidData() throws IOException;
 
 
+
 }
