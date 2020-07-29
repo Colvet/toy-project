@@ -1,26 +1,19 @@
 package colvet.toy.fetchserver.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 
 import java.util.Date;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class CovidDataResponseModel {
-
-    @Id
-    private String Id;
+public class GubunResponseModel {
 
     private Integer isolClearCnt;
     private Integer incDec;
-    private Date stdDay;
+    private String createDt;
     private String gubun;
     private Integer deathCnt;
     private Integer isolIngCnt;
+
 }
 //isolClearCnt: 18,                         # 격리 해제
 //incDec: 0,                                # 전일대비 증가수

@@ -1,15 +1,15 @@
 package colvet.toy.fetchserver.service;
 
 import colvet.toy.fetchserver.data.CovidDataItem;
-import colvet.toy.fetchserver.repository.CovidRepo;
-import com.netflix.discovery.converters.Auto;
+import colvet.toy.fetchserver.data.CovidRepo;
+import colvet.toy.fetchserver.model.GubunResponseModel;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.XML;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -17,7 +17,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Date;
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -38,7 +40,7 @@ public class CovidDataServiceImpl implements CovidDataService {
 
 
     @Override
-    public void fetchCovidData() throws IOException {
+    public void fetchAndSaveCovidData() throws IOException, ParseException {
 //        StringBuilder urlBuilder = new StringBuilder(covidUrl); /*URL*/
 //        urlBuilder.append("?" + URLEncoder.encode(apiKey,"UTF-8") + "=서비스키"); /*Service Key*/
 //        urlBuilder.append("&" + URLEncoder.encode(apiKey,"UTF-8") + "=" + URLEncoder.encode("-", "UTF-8")); /*공공데이터포털에서 받은 인증키*/
@@ -77,28 +79,44 @@ public class CovidDataServiceImpl implements CovidDataService {
 
             JSONObject obj = (JSONObject) jsonItems.get(i);
             CovidDataItem covidDataItem = new CovidDataItem();
-//            covidRepo.insert(obj);
 
             covidDataItem.setDefCnt((Integer) obj.get("defCnt"));
             covidDataItem.setIsolClearCnt((Integer) obj.get("isolClearCnt"));
             covidDataItem.setLocalOccCnt((Integer) obj.get("localOccCnt"));
             covidDataItem.setIncDec((Integer) obj.get("incDec"));
-            covidDataItem.setCreateDt((String) obj.get("createDt"));
             covidDataItem.setGubun((String) obj.get("gubun"));
             covidDataItem.setGubunEn((String) obj.get("gubunEn"));
             covidDataItem.setDeathCnt((Integer) obj.get("deathCnt"));
-            covidDataItem.setStdDay(obj.get("stdDay").toString());
+
+            covidDataItem.setCreateDt(obj.get("createDt").toString().split(" ")[0]);
+
             covidDataItem.setQurRate(obj.get("qurRate").toString());
             covidDataItem.setOverFlowCnt((Integer) obj.get("overFlowCnt"));
             covidDataItem.setGubunCn((String) obj.get("gubunCn"));
             covidDataItem.setIsolIngCnt((Integer) obj.get("isolIngCnt"));
             covidDataItem.setSeq((Integer) obj.get("seq"));
-//            System.out.println(covidDataItem);
-
 
             covidRepo.insert(covidDataItem);
-
-
         }
     }
+
+    @Override
+    public GubunResponseModel getCovidDataByGubunAndToday(String gubun) {
+        String nowDate = LocalDate.now().toString();
+        CovidDataItem resultCovidDataItem = covidRepo.findByGubunAndCreateDt(gubun, nowDate);
+
+        GubunResponseModel responseModel = new GubunResponseModel();
+
+        if(resultCovidDataItem == null){
+            return responseModel;
+        }else{
+            responseModel = new ModelMapper().map(resultCovidDataItem, GubunResponseModel.class);
+        }
+
+        log.info(responseModel.toString());
+
+        return responseModel;
+    }
+
+
 }

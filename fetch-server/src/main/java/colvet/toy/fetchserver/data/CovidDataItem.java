@@ -6,8 +6,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Date;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,11 +17,10 @@ public class CovidDataItem {
     private Integer isolClearCnt;
     private Integer localOccCnt;
     private Integer incDec;
-    private String createDt;
+    private String createDt;        // 기준날짜
     private String gubun;
     private String gubunEn;
     private Integer deathCnt;
-    private String stdDay;
     private String qurRate;
     private Integer overFlowCnt;
     private String gubunCn;
