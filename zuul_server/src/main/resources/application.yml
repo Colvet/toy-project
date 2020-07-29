@@ -20,7 +20,9 @@ zuul:
 #    inflearn:
 #      path: /inflearn/**
 #      serviceId: inflearn-java
-
+    fetch:
+      path: /fetch/**
+      serviceId: fetch-server
     telegram:
       path: /telegram/**
       serviceId: telegram
