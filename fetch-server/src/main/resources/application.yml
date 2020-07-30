@@ -11,7 +11,17 @@ spring:
     mongodb:
       uri: mongodb://localhost:27017  # mongodb docker name "mongo"
       database: Toy
-
+  kafka:
+    kafka:
+      template:
+        default-topic: covid-data
+      producer:
+        bootstrap-servers: localhost:9092
+        key-serializer: org.apache.kafka.common.serialization.StringSerializer
+        value-serializer: org.apache.kafka.common.serialization.JsonSerializer
+        properties:
+          acks: all
+          retries: 10
 server:
   port: ${PORT:0}
 

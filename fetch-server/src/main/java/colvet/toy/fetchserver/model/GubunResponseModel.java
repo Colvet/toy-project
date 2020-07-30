@@ -1,8 +1,7 @@
 package colvet.toy.fetchserver.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-
-import java.util.Date;
 
 @Data
 public class GubunResponseModel {
@@ -13,6 +12,9 @@ public class GubunResponseModel {
     private String gubun;
     private Integer deathCnt;
     private Integer isolIngCnt;
+
+    @JsonIgnore
+    private Boolean result;
 
 }
 //isolClearCnt: 18,                         # 격리 해제

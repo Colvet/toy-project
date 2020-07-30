@@ -108,8 +108,10 @@ public class CovidDataServiceImpl implements CovidDataService {
         GubunResponseModel responseModel = new GubunResponseModel();
 
         if(resultCovidDataItem == null){
+            responseModel.setResult(Boolean.FALSE);
             return responseModel;
         }else{
+            responseModel.setResult(Boolean.TRUE);
             responseModel = new ModelMapper().map(resultCovidDataItem, GubunResponseModel.class);
         }
 
