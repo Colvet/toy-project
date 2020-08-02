@@ -17,9 +17,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Date;
 
 @Slf4j
 @Service
@@ -34,7 +36,7 @@ public class CovidDataServiceImpl implements CovidDataService {
     CovidRepo covidRepo;
 
     @Autowired
-    public CovidDataServiceImpl(CovidRepo covidRepo){
+    public CovidDataServiceImpl(CovidRepo covidRepo) {
         this.covidRepo = covidRepo;
     }
 
@@ -59,7 +61,7 @@ public class CovidDataServiceImpl implements CovidDataService {
         System.out.println("Response code: " + conn.getResponseCode());
 
         BufferedReader rd;
-        if(conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
+        if (conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
             rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
         } else {
             rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
@@ -75,7 +77,7 @@ public class CovidDataServiceImpl implements CovidDataService {
         JSONObject json = XML.toJSONObject(sb.toString());
         JSONArray jsonItems = json.getJSONObject("response").getJSONObject("body").getJSONObject("items").getJSONArray("item");
 
-        for(int i=0; i < jsonItems.length(); i ++){
+        for (int i = 0; i < jsonItems.length(); i++) {
 
             JSONObject obj = (JSONObject) jsonItems.get(i);
             CovidDataItem covidDataItem = new CovidDataItem();
@@ -88,7 +90,7 @@ public class CovidDataServiceImpl implements CovidDataService {
             covidDataItem.setGubunEn((String) obj.get("gubunEn"));
             covidDataItem.setDeathCnt((Integer) obj.get("deathCnt"));
 
-            covidDataItem.setCreateDt(obj.get("createDt").toString().split(" ")[0]);
+            covidDataItem.setCreateDt(obj.get("createDt").toString());
 
             covidDataItem.setQurRate(obj.get("qurRate").toString());
             covidDataItem.setOverFlowCnt((Integer) obj.get("overFlowCnt"));
@@ -96,7 +98,14 @@ public class CovidDataServiceImpl implements CovidDataService {
             covidDataItem.setIsolIngCnt((Integer) obj.get("isolIngCnt"));
             covidDataItem.setSeq((Integer) obj.get("seq"));
 
-            covidRepo.insert(covidDataItem);
+
+            CovidDataItem checkCovidDataItem = covidRepo.findTopByGubunOrderByCreateDt(covidDataItem.getGubun());
+            if (!checkCovidDataItem.getCreateDt().equals(covidDataItem.getCreateDt())) {
+                log.info("업데이트 되지 않았다.");
+            } else {
+                covidRepo.insert(covidDataItem);
+                log.info("업데이트 되었다. 업데이트 내용 메시징");
+            }
         }
     }
 
@@ -107,10 +116,10 @@ public class CovidDataServiceImpl implements CovidDataService {
 
         GubunResponseModel responseModel = new GubunResponseModel();
 
-        if(resultCovidDataItem == null){
+        if (resultCovidDataItem == null) {
             responseModel.setResult(Boolean.FALSE);
             return responseModel;
-        }else{
+        } else {
             responseModel.setResult(Boolean.TRUE);
             responseModel = new ModelMapper().map(resultCovidDataItem, GubunResponseModel.class);
         }
@@ -119,6 +128,14 @@ public class CovidDataServiceImpl implements CovidDataService {
 
         return responseModel;
     }
+
+//    private Date chageDateFormat(String date) throws ParseException {
+//        DateFormat getDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S").parse(date);
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+//
+//
+//        return sdf.format(getDate);
+//    }
 
 
 }
