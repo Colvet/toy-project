@@ -1,8 +1,11 @@
 package colvet.toy.fetchserver.service;
 
 import colvet.toy.fetchserver.data.CovidDataItem;
+import colvet.toy.fetchserver.data.CovidDataMessage;
 import colvet.toy.fetchserver.data.CovidRepo;
+import colvet.toy.fetchserver.data.MessageType;
 import colvet.toy.fetchserver.model.GubunResponseModel;
+import colvet.toy.fetchserver.producer.KafkaProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -34,6 +37,9 @@ public class CovidDataServiceImpl implements CovidDataService {
 
     @Autowired
     CovidRepo covidRepo;
+
+    @Autowired
+    KafkaProducer kafkaProducer;
 
     @Autowired
     public CovidDataServiceImpl(CovidRepo covidRepo) {
@@ -98,12 +104,18 @@ public class CovidDataServiceImpl implements CovidDataService {
             covidDataItem.setIsolIngCnt((Integer) obj.get("isolIngCnt"));
             covidDataItem.setSeq((Integer) obj.get("seq"));
 
+            CovidDataItem checkCovidDataItem = covidRepo.findTopByGubunOrderByCreateDtDesc(covidDataItem.getGubun());
 
-            CovidDataItem checkCovidDataItem = covidRepo.findTopByGubunOrderByCreateDt(covidDataItem.getGubun());
-            if (!checkCovidDataItem.getCreateDt().equals(covidDataItem.getCreateDt())) {
+
+            if (checkCovidDataItem.getCreateDt().equals(covidDataItem.getCreateDt())) {
+                CovidDataMessage covidDataMessage = new ModelMapper().map(covidDataItem, CovidDataMessage.class);
+
                 log.info("업데이트 되지 않았다.");
             } else {
                 covidRepo.insert(covidDataItem);
+                CovidDataMessage covidDataMessage = new ModelMapper().map(covidDataItem, CovidDataMessage.class);
+                covidDataMessage.setMessageType(MessageType.UPDATE);
+                log.info(covidDataMessage.toString());
                 log.info("업데이트 되었다. 업데이트 내용 메시징");
             }
         }
