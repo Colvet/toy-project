@@ -51,12 +51,26 @@ open:
 
 ---
 spring:
+  profiles:
+    active: test
   data:
     mongodb:
       uri: mongodb://localhost:27017/test
   jpa:
     hibernate:
       ddl-auto: update
+
+  kafka:
+    kafka:
+      template:
+        default-topic: covid-data
+      producer:
+        bootstrap-servers: localhost:9092
+        key-serializer: org.apache.kafka.common.serialization.StringSerializer
+        value-serializer: org.apache.kafka.common.serialization.JsonSerializer
+        properties:
+          acks: all
+          retries: 10
 
 
 server:
@@ -69,5 +83,6 @@ logging:
 open:
   api:
     key:
+
 
 

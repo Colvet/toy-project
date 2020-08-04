@@ -4,6 +4,7 @@ package colvet.toy.fetchserver.data;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.json.JSONObject;
 
 @Data
 @AllArgsConstructor
