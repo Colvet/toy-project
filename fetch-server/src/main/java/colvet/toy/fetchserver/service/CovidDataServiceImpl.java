@@ -108,8 +108,6 @@ public class CovidDataServiceImpl implements CovidDataService {
 
 
             if (checkCovidDataItem.getCreateDt().equals(covidDataItem.getCreateDt())) {
-                CovidDataMessage covidDataMessage = new ModelMapper().map(covidDataItem, CovidDataMessage.class);
-
                 log.info("업데이트 되지 않았다.");
             } else {
                 covidRepo.insert(covidDataItem);
@@ -117,6 +115,7 @@ public class CovidDataServiceImpl implements CovidDataService {
                 covidDataMessage.setMessageType(MessageType.UPDATE);
                 log.info(covidDataMessage.toString());
                 log.info("업데이트 되었다. 업데이트 내용 메시징");
+                kafkaProducer.sendDataEvent(covidDataMessage);
             }
         }
     }

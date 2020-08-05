@@ -18,7 +18,7 @@ spring:
       producer:
         bootstrap-servers: localhost:9092
         key-serializer: org.apache.kafka.common.serialization.StringSerializer
-        value-serializer: org.apache.kafka.common.serialization.JsonSerializer
+        value-serializer: org.apache.kafka.common.serialization.JasonSerializer
         properties:
           acks: all
           retries: 10
@@ -67,7 +67,8 @@ spring:
       producer:
         bootstrap-servers: localhost:9092
         key-serializer: org.apache.kafka.common.serialization.StringSerializer
-        value-serializer: org.apache.kafka.common.serialization.JsonSerializer
+        value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
         properties:
           acks: all
           retries: 10
