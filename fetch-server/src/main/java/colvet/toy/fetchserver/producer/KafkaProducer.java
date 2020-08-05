@@ -24,7 +24,7 @@ public class KafkaProducer {
         String key = "Test";
         String value = covidDataMessage.toString();
 
-        ProducerRecord<String, String> producerRecord = new ProducerRecord<>(topic, key);
+        ProducerRecord<String, String> producerRecord = new ProducerRecord<>(topic, key, value);
 
         ListenableFuture<SendResult<String, String>> listenableFuture = kafkaTemplate.send(producerRecord);
         listenableFuture.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
