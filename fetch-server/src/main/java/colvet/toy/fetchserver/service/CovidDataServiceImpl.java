@@ -13,6 +13,7 @@ import org.json.XML;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -20,9 +21,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -48,7 +47,8 @@ public class CovidDataServiceImpl implements CovidDataService {
 
 
     @Override
-    public void fetchAndSaveCovidData() throws IOException, ParseException {
+    @Scheduled(fixedDelay = 90000)
+    public void fetchAndSaveCovidData() throws IOException{
 //        StringBuilder urlBuilder = new StringBuilder(covidUrl); /*URL*/
 //        urlBuilder.append("?" + URLEncoder.encode(apiKey,"UTF-8") + "=서비스키"); /*Service Key*/
 //        urlBuilder.append("&" + URLEncoder.encode(apiKey,"UTF-8") + "=" + URLEncoder.encode("-", "UTF-8")); /*공공데이터포털에서 받은 인증키*/
@@ -56,7 +56,7 @@ public class CovidDataServiceImpl implements CovidDataService {
 //        urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode("10", "UTF-8")); /*한 페이지 결과 수*/
 //        urlBuilder.append("&" + URLEncoder.encode("startCreateDt","UTF-8") + "=" + URLEncoder.encode("20200410", "UTF-8")); /*검색할 생성일 범위의 시작*/
 //        urlBuilder.append("&" + URLEncoder.encode("endCreateDt","UTF-8") + "=" + URLEncoder.encode("20200410", "UTF-8")); /*검색할 생성일 범위의 종료*/
-
+        log.info(String.valueOf(new Date()));
         StringBuffer result = new StringBuffer();
         String urlStr = covidUrl + "?ServiceKey=" + apiKey;
         URL url = new URL(urlStr);
@@ -140,13 +140,6 @@ public class CovidDataServiceImpl implements CovidDataService {
         return responseModel;
     }
 
-//    private Date chageDateFormat(String date) throws ParseException {
-//        DateFormat getDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S").parse(date);
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-//
-//
-//        return sdf.format(getDate);
-//    }
 
 
 }
